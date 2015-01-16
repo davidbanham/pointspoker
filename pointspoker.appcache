@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# Fri 16th Jan 2015
+
+CACHE:
+index.html
+index.js
+index.css
+
+NETWORK:
+*

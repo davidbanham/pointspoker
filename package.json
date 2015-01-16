@@ -1,0 +1,18 @@
+{
+  "name": "pointspoker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/browserify -t coffeeify index.coffee > index.js",
+    "deploy": "s3cmd --config=/Users/davidbanham/.s3cfg_personal sync --delete-removed -r --acl-public --exclude 'git/*' --exclude 'node_modules/*' --exclude '*.swp' . s3://pointspoker.davidbanham.com"
+  },
+  "author": "david@banham.id.au",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^8.1.0",
+    "coffeeify": "^1.0.0",
+    "rtc-quickconnect": "^4.1.0"
+  }
+}

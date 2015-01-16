@@ -1,0 +1,18 @@
+.voteOption[selected=true] {
+  background-color: red;
+}
+
+.voteOption {
+  text-align: center;
+}
+
+.contrast {
+  background-color: grey;
+}
+
+.reverse {
+  display: -webkit-flex;
+  -webkit-flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
+}
