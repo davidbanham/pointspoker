@@ -108,7 +108,7 @@ sendCall = broadcast 'calls'
 
 getChosenVote = ->
   node = document.querySelector('.voteOption[selected=true]')
-  return node?.innerText
+  return node?.textContent
 
 appendLine = (text, className) ->
   node = document.createElement 'P'
