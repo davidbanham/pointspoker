@@ -10,10 +10,11 @@ room = localStorage.room or prompt 'Room name?'
 localStorage.username = username
 localStorage.room = room
 
-sendVote = null
-sendCall = null
-
 peers = {}
+
+guide =
+  votes: {}
+  calls: {}
 
 VOTETIME = 10 # seconds
 
@@ -29,7 +30,7 @@ window.onload = ->
   quickconnect("http://rtc.io/switchboard/", opts)
     .createDataChannel('votes')
     .on('channel:opened:votes', (id, dc) ->
-      sendVote = (vote) ->
+      guide.votes[id] = (vote) ->
         dc.send JSON.stringify
           vote: vote
           username: username
@@ -37,19 +38,23 @@ window.onload = ->
         message = JSON.parse evt.data
         writeVote message.username, message.vote
     )
+    .on 'channel:closed:votes', (id, dc) ->
+      delete guide.votes[id]
     .createDataChannel('calls')
     .on('channel:opened:calls', (id, dc) ->
       dc.onmessage = (evt) ->
         message = JSON.parse evt.data
         startVote message
 
-      sendCall = (story) ->
+      guide.calls[id] = (story) ->
         startVote  username: username, story: story
 
         dc.send JSON.stringify
           story: story
           username: username
     )
+    .on 'channel:closed:calls', (id, dc) ->
+      delete guide.calls[id]
     .createDataChannel('peerInfo')
     .on 'channel:opened:peerInfo', (id, dc) ->
       dc.onmessage = (evt) ->
@@ -92,6 +97,14 @@ startVote = (message) ->
       voteActive = false
 
   , 1000
+
+broadcast = (type) ->
+  return (datum) ->
+    for _, channel of guide[type]
+      channel datum
+
+sendVote = broadcast 'votes'
+sendCall = broadcast 'calls'
 
 getChosenVote = ->
   node = document.querySelector('.voteOption[selected=true]')
